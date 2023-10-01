@@ -1,12 +1,7 @@
 import { Document } from "mongoose";
 
 export interface userInterface extends Document {
-    user_id: {
-        type: number;
-        required: true;
-        unique: true;
-        default: () => Promise<number>;
-    };
+    user_id: number;
     username: string;
     first_name: string;
     last_name: string;

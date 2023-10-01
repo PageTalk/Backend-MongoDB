@@ -40,6 +40,8 @@ export const createUser = async (req: Request, res: Response) => {
         const salt = await bcrypt.genSalt(10);
         const securedPassword = await bcrypt.hash(password, salt);
 
+        console.log("test")
+
         // Creating a new user
         const newUser = new user({
             username,
@@ -51,22 +53,23 @@ export const createUser = async (req: Request, res: Response) => {
         });
 
         const savedUser = await newUser.save();
+        console.log(savedUser)
 
-        const payloadData = {
-            id: savedUser.user_id,
-            username,
-            email,
-            role: Role.user,
-        };
+        // const payloadData = {
+        //     id: savedUser.user_id,
+        //     username,
+        //     email,
+        //     role: Role.user,
+        // };
 
-        // Creating a JWT token
-        const authToken = jwt.sign(payloadData, process.env.JWT_SECRET!);
+        // // Creating a JWT token
+        // const authToken = jwt.sign(payloadData, process.env.JWT_SECRET!);
 
         return res.status(201).json({
             status: true,
             message: "User created successfully",
             id: savedUser.user_id,
-            authToken,
+            // authToken,
         });
     } catch (error) {
         return res.status(500).json({
