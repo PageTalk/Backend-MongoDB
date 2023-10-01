@@ -1,0 +1,10 @@
+[
+    {
+        "first_name": "Shantanu",
+        "last_name": "Wable",
+        "email": "noobmaster69@gmail.com",
+        "password": "adminonetestpass",
+        "phone": "4535437768",
+        "authToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MywidXNlcm5hbWUiOiJub29ibWFzdGVyNjkiLCJlbWFpbCI6Im5vb2JtYXN0ZXI2OUBnbWFpbC5jb20iLCJyb2xlIjoiYWRtaW4iLCJpYXQiOjE2OTQ4NzI3MzV9.UljTkGYcYRsvKp1eTB8Qokel9OKHTSpnoZFb95hseZY"
+    }
+]

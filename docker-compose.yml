@@ -1,0 +1,18 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql
+    container_name: pagetalk-mysql-container
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: pagetalk
+      MYSQL_USER: shantanu
+      MYSQL_PASSWORD: shantanu
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+
+volumes:
+  mysql-data:
