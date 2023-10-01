@@ -1,8 +1,16 @@
 import { Schema, model } from "mongoose";
 import { userInterface } from "../interfaces/user";
+import { getNextSequenceValue } from "../functions/getNextSequence";
 
 const userSchema = new Schema<userInterface>({
-    user_id: { type: Number, required: true },
+    user_id: { 
+        type: Number, 
+        required: true,
+        unique: true,
+        default: async () => {
+            return await getNextSequenceValue("users");
+        }
+    },
     username: { type: String, required: true, unique: true },
     first_name: { type: String, required: true },
     last_name: String,

@@ -1,11 +1,16 @@
-import { Document } from 'mongoose';
+import { Document } from "mongoose";
 
 export interface userInterface extends Document {
-    user_id: number;
+    user_id: {
+        type: number;
+        required: true;
+        unique: true;
+        default: () => Promise<number>;
+    };
     username: string;
     first_name: string;
     last_name: string;
-    role: string,
+    role: string;
     phone: number;
     email: string;
     isVerified: boolean;

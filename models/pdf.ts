@@ -1,8 +1,16 @@
 import { Schema, model } from "mongoose";
 import { pdfInterface } from "../interfaces/pdf";
+import { getNextSequenceValue } from "../functions/getNextSequence";
 
 const pdfSchema = new Schema<pdfInterface>({
-    pdf_id: { type: Number, required: true },
+    pdf_id: { 
+        type: Number, 
+        required: true,
+        unique: true,
+        default: async () => {
+            return getNextSequenceValue("pdf");
+        }
+    },
     user_id: { type: Number, required: true },
     url: { type: String, required: true },
     title: { type: String, required: true },
@@ -15,4 +23,4 @@ const pdfSchema = new Schema<pdfInterface>({
     },
 });
 
-export const pdf = model<pdfInterface>("Pdf", pdfSchema);
+export const pdf = model<pdfInterface>("PDF", pdfSchema);
