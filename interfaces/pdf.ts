@@ -1,11 +1,7 @@
 import { Document } from "mongoose";
 
 export interface pdfInterface extends Document {
-    pdf_id: {
-        type: number;
-        unique: true;
-        default: () => Promise<number>;
-    };
+    pdf_id: number;
     user_id: number;
     url: string;
     title: string;

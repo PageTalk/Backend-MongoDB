@@ -3,13 +3,7 @@ import { interactionInterface } from "../interfaces/interaction";
 import { getNextSequenceValue } from "../functions/getNextSequence";
 
 const interactionSchema = new Schema<interactionInterface>({
-    interaction_id: { 
-        type: Number, 
-        unique: true,
-        default: async () => {
-            return getNextSequenceValue("interaction");
-        }
-    },
+    interaction_id: Number,
     user_id: Number,
     collection_id: Number,
     timestamp: { 
@@ -24,6 +18,20 @@ const interactionSchema = new Schema<interactionInterface>({
         type: String,
         default: ""
     },
+});
+
+interactionSchema.pre("save", async function (this: interactionInterface, next) {
+    if(this.isNew) {
+        try {
+            const seqValue = await getNextSequenceValue("interaction");
+            this.user_id = seqValue;
+            next();
+        } catch (error: any) {
+            next(error);
+        }
+    } else {
+        next();
+    }
 });
 
 export const interaction = model<interactionInterface>("Interaction", interactionSchema);
