@@ -3,13 +3,7 @@ import { queryInterface } from "../interfaces/query";
 import { getNextSequenceValue } from "../functions/getNextSequence";
 
 const querySchema = new Schema<queryInterface>({
-    query_id: {
-        type: Number,
-        unique: true,
-        default: async () => {
-            return getNextSequenceValue("query");
-        },
-    },
+    query_id: Number,
     user_id: { type: Number, required: true },
     pdf_id: { type: Number, required: true },
     query_text: { type: String, required: true },
@@ -20,6 +14,20 @@ const querySchema = new Schema<queryInterface>({
         default: null,
     },
     is_answered: { type: Boolean, default: false },
+});
+
+querySchema.pre("save", async function (this: queryInterface, next) {
+    if(this.isNew) {
+        try {
+            const seqValue = await getNextSequenceValue("query");
+            this.user_id = seqValue;
+            next();
+        } catch (error: any) {
+            next(error);
+        }
+    } else {
+        next();
+    }
 });
 
 export const query = model<queryInterface>("Query", querySchema);
