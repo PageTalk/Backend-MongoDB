@@ -120,133 +120,111 @@ export const loginUser = async (req: Request, res: Response) => {
 };
 
 export const updateUser = async (req: Request, res: Response) => {
-    //     try {
-    //         const token = req.headers.authorization?.split(" ")[1];
-    //         if (!token) {
-    //             return res.status(200).json({
-    //                 success: false,
-    //                 message: "Error! Please provide a token.",
-    //             });
-    //         }
-    //         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-    //         const token_username = (decodedToken as Token).username;
-    //         const { username } = req.params;
-    //         if (token_username !== username) {
-    //             return res.status(403).json({
-    //                 status: false,
-    //                 message: "You are not authorized to perform this action",
-    //             });
-    //         }
-    //         const user_id = (decodedToken as Token).id;
-    //         const { first_name, last_name, phone, email, password } = req.body;
-    //         let sql = "UPDATE `users` SET ";
-    //         const updateFields = [];
-    //         if (first_name) {
-    //             updateFields.push(`first_name = '${first_name}'`);
-    //         }
-    //         if (last_name) {
-    //             updateFields.push(`last_name = '${last_name}'`);
-    //         }
-    //         if (phone) {
-    //             updateFields.push(`phone = '${phone}'`);
-    //         }
-    //         if (email) {
-    //             updateFields.push(`email = '${email}'`);
-    //         }
-    //         if (password) {
-    //             const salt = await bcrypt.genSalt(10);
-    //             const securedPassword = await bcrypt.hash(password, salt);
-    //             updateFields.push(`password = '${securedPassword}'`);
-    //         }
-    //         sql += updateFields.join(", ");
-    //         await queryDatabase(sql);
-    //         const updatedUserArray = await queryDatabase(
-    //             `SELECT * FROM users WHERE user_id = ${user_id}`
-    //         );
-    //         return res.status(200).json({
-    //             status: true,
-    //             message: "User updated successfully",
-    //             updated_query: updatedUserArray[0],
-    //         });
-    //     } catch (error) {
-    //         return res.status(500).json({
-    //             status: false,
-    //             message: "Some error occured",
-    //             error: error,
-    //         });
-    //     }
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+            return res.status(200).json({
+                success: false,
+                message: "Error! Please provide a token.",
+            });
+        }
+        const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
+        const token_username = (decodedToken as Token).username;
+        const { username } = req.params;
+        if (token_username !== username) {
+            return res.status(403).json({
+                status: false,
+                message: "You are not authorized to perform this action",
+            });
+        }
+        const user_id = (decodedToken as Token).id;
+        const { first_name, last_name, phone, email, password } = req.body;
+        const updatedUser = await user.findOneAndUpdate(
+            { user_id },
+            { first_name, last_name, phone, email, password },
+            { new: true }
+        );
+
+        return res.status(200).json({
+            status: true,
+            message: "User updated successfully",
+            updatedUser
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Some error occured",
+            error: error,
+        });
+    }
 };
 
 // Admin Functions
 
 export const getUserByUsername = async (req: Request, res: Response) => {
-    //     try {
-    //         const token = req.headers.authorization?.split(" ")[1];
-    //         if (!token) {
-    //             return res.status(200).json({
-    //                 success: false,
-    //                 message: "Error! Please provide a token.",
-    //             });
-    //         }
-    //         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-    //         const role = (decodedToken as Token).role;
-    //         if (role !== Role.admin) {
-    //             return res.status(403).json({
-    //                 status: false,
-    //                 message: "You are not authorized to perform this action",
-    //             });
-    //         }
-    //         const query = `SELECT * FROM users WHERE username = '${req.params.username}'`;
-    //         const result = await queryDatabase(query);
-    //         return res.status(200).json({
-    //             status: true,
-    //             results: result.length,
-    //             data: {
-    //                 users: result,
-    //             },
-    //         });
-    //     } catch (error) {
-    //         return res.status(500).json({
-    //             status: false,
-    //             message: "Some error occured",
-    //             error: error,
-    //         });
-    //     }
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+            return res.status(200).json({
+                success: false,
+                message: "Error! Please provide a token.",
+            });
+        }
+        const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
+        const role = (decodedToken as Token).role;
+        if (role !== Role.admin) {
+            return res.status(403).json({
+                status: false,
+                message: "You are not authorized to perform this action",
+            });
+        }
+        const { username } = req.params;
+        const userList = await user.find({ username }).exec();
+        return res.status(200).json({
+            status: true,
+            data: {
+                users: userList,
+            },
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Some error occured",
+            error: error,
+        });
+    }
 };
 
 export const getAllUsers = async (req: Request, res: Response) => {
-    //     // console.log(req.body)
-    //     try {
-    //         const token = req.headers.authorization?.split(" ")[1];
-    //         if (!token) {
-    //             return res.status(200).json({
-    //                 success: false,
-    //                 message: "Error! Please provide a token.",
-    //             });
-    //         }
-    //         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-    //         const role = (decodedToken as Token).role;
-    //         if (role !== Role.admin) {
-    //             return res.status(403).json({
-    //                 status: false,
-    //                 message: "You are not authorized to perform this action",
-    //             });
-    //         }
-    //         const query = "SELECT * FROM users";
-    //         const results = await queryDatabase(query);
-    //         return res.status(200).json({
-    //             status: true,
-    //             results: results.length,
-    //             userData: decodedToken,
-    //             data: {
-    //                 users: results,
-    //             },
-    //         });
-    //     } catch (error) {
-    //         return res.status(500).json({
-    //             status: false,
-    //             message: "Some error occured",
-    //             error: error,
-    //         });
-    //     }
+    // console.log(req.body)
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+            return res.status(200).json({
+                success: false,
+                message: "Error! Please provide a token.",
+            });
+        }
+        const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
+        const role = (decodedToken as Token).role;
+        if (role !== Role.admin) {
+            return res.status(403).json({
+                status: false,
+                message: "You are not authorized to perform this action",
+            });
+        }
+        const userList = await user.find().exec();
+        return res.status(200).json({
+            status: true,
+            data: {
+                users: userList,
+            },
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Some error occured",
+            error: error,
+        });
+    }
 };
