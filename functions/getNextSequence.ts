@@ -3,7 +3,7 @@ import { sequence } from "../models/sequence";
 import { sequenceInterface } from "../interfaces/sequence";
 
 export async function getNextSequenceValue(collectionName: string): Promise<number> {
-  const filter = { collectionName }; // Use collectionName as the _id
+  const filter = { collectionName };
   const update = { $inc: { sequenceValue: 1 } };
   const options = { new: true, upsert: true };
 
