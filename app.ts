@@ -24,11 +24,11 @@ app.use(express.static("./public"));
 // Routes
 
 // clean routes (ex. api/v1/{user}/pdf and then upload etc.)
-app.use("/api/v1/user", UserRouter);
-app.use("/api/v1/admin", AdminRouter);
-app.use("/api/v1/queries", QueryRouter);
-app.use("/api/v1/pdf", PdfRouter);
-app.use("/api/v1/collection", CollectionRouter);
+app.use("/user", UserRouter);
+app.use("/admin", AdminRouter);
+app.use("/queries", QueryRouter);
+app.use("/pdf", PdfRouter);
+app.use("/collection", CollectionRouter);
 
 // Starting Server
 const start = async () => {
