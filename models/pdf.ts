@@ -12,7 +12,7 @@ const pdfSchema = new Schema<pdfInterface>({
         type: Date, 
         default: Date.now
     },
-    tokenized_text: { type: String, required: true, default: "" },
+    tokenized_text: { type: String, default: "" },
     pdf_metadata: {
         created_at: { type: Date, default: Date.now },
         updated_at: { type: Date, default: Date.now },
