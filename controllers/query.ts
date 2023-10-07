@@ -2,9 +2,10 @@ import * as dotenv from "dotenv";
 dotenv.config(); // Load environment variables from .env file
 import { Request, Response } from "express";
 import jwt from "jsonwebtoken";
+
+import { interaction } from "../models/interaction";
 import { query } from "../models/query";
 import { pdf } from "../models/pdf";
-
 import { Token } from "../interfaces/token";
 import { Role } from "../enums/role";
 
@@ -36,6 +37,12 @@ export const sendQuery = async (req: Request, res: Response) => {
             user_id,
             pdf_id,
             query_text,
+        });
+
+        interaction.create({
+            user_id,
+            interaction_type: "Create",
+            interaction_details: "Query sent",
         });
 
         return res.status(200).json({
@@ -72,6 +79,13 @@ export const getAllQueriesbyUsernameAndPDF = async (req: Request, res: Response)
             });
         }
         const selectedQueries = await query.find({ user_id, pdf_id: pdfID }).exec();
+
+        interaction.create({
+            user_id,
+            interaction_type: "Get",
+            interaction_details: "Queries retrieved",
+        });
+
         return res.status(200).json({
             status: true,
             message: "Queries retrieved successfully",
@@ -99,6 +113,13 @@ export const getQuerybyID = async (req: Request, res: Response) => {
         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
         const user_id = (decodedToken as Token).id;
         const selectedQuery = query.findOne({ user_id, query_id: queryID }).exec();
+
+        interaction.create({
+            user_id,
+            interaction_type: "Get",
+            interaction_details: "Query retrieved",
+        });
+
         return res.status(200).json({
             status: true,
             message: "Query retrieved successfully",
@@ -147,6 +168,12 @@ export const updateQuery = async (req: Request, res: Response) => {
             }
         );
 
+        interaction.create({
+            user_id,
+            interaction_type: "Update",
+            interaction_details: "Query updated",
+        });
+
         return res.status(200).json({
             status: true,
             message: "Query updated successfully",
@@ -183,6 +210,12 @@ export const deleteQuery = async (req: Request, res: Response) => {
 
         await query.deleteOne({ query_id: queryID, user_id: user_id }).exec();
 
+        interaction.create({
+            user_id,
+            interaction_type: "Delete",
+            interaction_details: "Query deleted",
+        });
+
         return res.status(200).json({
             status: true,
             message: "Query deleted successfully",
@@ -217,6 +250,12 @@ export const getAllQueries = async (req: Request, res: Response) => {
         }
         
         const results = await query.find().exec();
+
+        interaction.create({
+            user_id: (decodedToken as Token).id,
+            interaction_type: "Get",
+            interaction_details: "All queries retrieved (admin)",
+        });
 
         return res.status(200).json({
             status: true,

@@ -7,8 +7,8 @@ import { v4 as uuidv4 } from "uuid";
 var path = require("path");
 import jwt from "jsonwebtoken";
 
+import { interaction } from "../models/interaction";
 import { pdf } from "../models/pdf";
-
 import { Token } from "../interfaces/token";
 import { Role } from "../enums/role";
 
@@ -42,7 +42,7 @@ export const uploadPDF = async (req: Request, res: Response) => {
 
         upload(req, res, async (err: any) => {
             if (err) {
-                return res.status(400).json({ error: "Error uploading file" });
+                return res.status(400).json({ error: err });
             }
 
             const file = req.file;
@@ -75,6 +75,12 @@ export const uploadPDF = async (req: Request, res: Response) => {
                 await pdf.create({
                     user_id,
                     url: fileUrl,
+                });
+
+                interaction.create({
+                    user_id,
+                    interaction_type: "Upload PDF",
+                    interaction_details: "PDF uploaded",
                 });
                 
                 return res.status(201).json({
@@ -117,6 +123,12 @@ export const retrievePDF = async (req: Request, res: Response) => {
         const user_id = (decodedToken as Token).id;
         
         const pdfArray = await pdf.find({ user_id: user_id }).exec();
+
+        interaction.create({
+            user_id,
+            interaction_type: "Get PDF",
+            interaction_details: "PDF retrieved",
+        });
 
         return res.status(200).json({
             status: true,

@@ -3,6 +3,8 @@ dotenv.config(); // Load environment variables from .env file
 import { Request, Response } from "express";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
+
+import { interaction } from "../models/interaction";
 import { user } from "../models/user";
 import { Role } from "../enums/role";
 import { Token } from "../interfaces/token";
@@ -55,6 +57,12 @@ export const createUser = async (req: Request, res: Response) => {
 
         // Creating a JWT token
         const authToken = jwt.sign(payloadData, process.env.JWT_SECRET!);
+    
+        interaction.create({
+            user_id: savedUser.user_id,
+            interaction_type: "Sign-up",
+            interaction_details: "user signed up",
+        });
 
         return res.status(201).json({
             status: true,
@@ -72,51 +80,57 @@ export const createUser = async (req: Request, res: Response) => {
 };
 
 export const loginUser = async (req: Request, res: Response) => {
-        try {
-            const { username, password } = req.body;
-            const retrievedUserArray = await user.find({ username }).exec();
-            if (retrievedUserArray.length === 0) {
-                return res.status(401).json({
-                    status: false,
-                    message: "Login with correct username",
-                });
-            }
-
-            const retrievedUser = retrievedUserArray[0];
-            const passwordCompare = await bcrypt.compare(
-                password,
-                retrievedUser.password
-            );
-
-            if (!passwordCompare) {
-                return res.status(401).json({
-                    status: false,
-                    message: "Login with correct password",
-                });
-            }
-
-            const payloadData: Token = {
-                id: retrievedUser.user_id,
-                username,
-                email: retrievedUser.email,
-                role: (retrievedUser.role) as Role,
-            };
-
-            // Creating a JWT token
-            const authToken = jwt.sign(payloadData, process.env.JWT_SECRET!);
-
-            return res.status(200).json({
-                status: true,
-                message: "User Login successful",
-                authToken,
-            });
-        } catch (error) {
-            return res.status(500).json({
+    try {
+        const { username, password } = req.body;
+        const retrievedUserArray = await user.find({ username }).exec();
+        if (retrievedUserArray.length === 0) {
+            return res.status(401).json({
                 status: false,
-                message: "Some error occured",
-                error: error,
+                message: "Login with correct username",
             });
         }
+
+        const retrievedUser = retrievedUserArray[0];
+        const passwordCompare = await bcrypt.compare(
+            password,
+            retrievedUser.password
+        );
+
+        if (!passwordCompare) {
+            return res.status(401).json({
+                status: false,
+                message: "Login with correct password",
+            });
+        }
+
+        const payloadData: Token = {
+            id: retrievedUser.user_id,
+            username,
+            email: retrievedUser.email,
+            role: (retrievedUser.role) as Role,
+        };
+
+        // Creating a JWT token
+        const authToken = jwt.sign(payloadData, process.env.JWT_SECRET!);
+
+        interaction.create({
+            user_id: retrievedUser.user_id,
+            interaction_type: "Login",
+            interaction_details: "User logged in",
+        });
+
+        return res.status(200).json({
+            status: true,
+            message: "User Login successful",
+            authToken,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Some error occured",
+            error: error,
+        });
+    }
 };
 
 export const updateUser = async (req: Request, res: Response) => {
@@ -144,6 +158,12 @@ export const updateUser = async (req: Request, res: Response) => {
             { first_name, last_name, phone, email, password },
             { new: true }
         );
+
+        interaction.create({
+            user_id: updatedUser!.user_id,
+            interaction_type: "Update",
+            interaction_details: "User updated",
+        });
 
         return res.status(200).json({
             status: true,
@@ -180,6 +200,13 @@ export const getUserByUsername = async (req: Request, res: Response) => {
         }
         const { username } = req.params;
         const userList = await user.find({ username }).exec();
+
+        interaction.create({
+            user_id: userList[0].user_id,
+            interaction_type: "Get",
+            interaction_details: "User retrieved",
+        });
+
         return res.status(200).json({
             status: true,
             data: {
@@ -214,6 +241,13 @@ export const getAllUsers = async (req: Request, res: Response) => {
             });
         }
         const userList = await user.find().exec();
+
+        interaction.create({
+            user_id: userList[0].user_id,
+            interaction_type: "Get",
+            interaction_details: "All users retrieved",
+        });
+
         return res.status(200).json({
             status: true,
             data: {
