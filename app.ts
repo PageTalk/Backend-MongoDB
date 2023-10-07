@@ -2,10 +2,6 @@ import * as dotenv from "dotenv";
 dotenv.config(); // Load environment variables from .env file
 import express from "express";
 var bodyParser = require("body-parser");
-import { MongoClient, ServerApiVersion } from "mongodb";
-import { Request, Response } from "express";
-
-import { user } from "./models/user";
 
 import { connectDB } from "./database/connection";
 
