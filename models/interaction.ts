@@ -24,7 +24,7 @@ interactionSchema.pre("save", async function (this: interactionInterface, next) 
     if(this.isNew) {
         try {
             const seqValue = await getNextSequenceValue("interaction");
-            this.user_id = seqValue;
+            this.interaction_id = seqValue;
             next();
         } catch (error: any) {
             next(error);

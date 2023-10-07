@@ -6,7 +6,7 @@ const pdfSchema = new Schema<pdfInterface>({
     pdf_id: Number,
     user_id: { type: Number, required: true },
     url: { type: String, required: true },
-    title: { type: String, required: true },
+    title: { type: String, default: "" },
     description: String,
     upload_timestamp: { 
         type: Date, 
@@ -23,7 +23,7 @@ pdfSchema.pre("save", async function (this: pdfInterface, next) {
     if(this.isNew) {
         try {
             const seqValue = await getNextSequenceValue("pdf");
-            this.user_id = seqValue;
+            this.pdf_id = seqValue;
             next();
         } catch (error: any) {
             next(error);

@@ -20,7 +20,7 @@ querySchema.pre("save", async function (this: queryInterface, next) {
     if(this.isNew) {
         try {
             const seqValue = await getNextSequenceValue("query");
-            this.user_id = seqValue;
+            this.query_id = seqValue;
             next();
         } catch (error: any) {
             next(error);
