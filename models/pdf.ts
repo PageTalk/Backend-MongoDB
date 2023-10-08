@@ -4,7 +4,7 @@ import { getNextSequenceValue } from "../functions/getNextSequence";
 
 const pdfSchema = new Schema<pdfInterface>({
     pdf_id: Number,
-    user_id: { type: Number, required: true },
+    username: { type: String, required: true },
     url: { type: String, required: true },
     title: { type: String, default: "" },
     description: String,

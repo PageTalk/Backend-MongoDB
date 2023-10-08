@@ -4,7 +4,7 @@ import { getNextSequenceValue } from "../functions/getNextSequence";
 
 const interactionSchema = new Schema<interactionInterface>({
     interaction_id: Number,
-    user_id: Number,
+    username: String,
     collection_id: Number,
     timestamp: { 
         type: Date, 

@@ -4,7 +4,7 @@ import { getNextSequenceValue } from "../functions/getNextSequence";
 
 const collectionSchema = new Schema<collectionInterface>({
     collection_id: Number,
-    user_id: { type: Number, required: true },
+    username: { type: String, required: true },
     pdf_id: { type: Number, required: true },
     collection_name: String,
     collection_description: String,

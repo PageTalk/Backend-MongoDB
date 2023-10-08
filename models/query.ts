@@ -4,7 +4,7 @@ import { getNextSequenceValue } from "../functions/getNextSequence";
 
 const querySchema = new Schema<queryInterface>({
     query_id: Number,
-    user_id: { type: Number, required: true },
+    username: { type: String, required: true },
     pdf_id: { type: Number, required: true },
     query_text: { type: String, required: true },
     query_response: String,
