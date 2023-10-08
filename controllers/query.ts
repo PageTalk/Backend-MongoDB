@@ -19,8 +19,9 @@ export const sendQuery = async (req: Request, res: Response) => {
                 message: "Error! Please provide a token.",
             });
         }
+
         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const user_id = (decodedToken as Token).id;
+        const username = (decodedToken as Token).username;
 
         const retirevedPDFArray = await pdf.find({ pdf_id: pdfID }).exec();
         if (!retirevedPDFArray || retirevedPDFArray.length === 0) {
@@ -34,13 +35,13 @@ export const sendQuery = async (req: Request, res: Response) => {
 
         const { query_text } = req.body;
         const savedQuery = await query.create({
-            user_id,
+            username,
             pdf_id,
             query_text,
         });
 
         interaction.create({
-            user_id,
+            username,
             interaction_type: "Create",
             interaction_details: "Query sent",
         });
@@ -70,7 +71,8 @@ export const getAllQueriesbyUsernameAndPDF = async (req: Request, res: Response)
             });
         }
         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const user_id = (decodedToken as Token).id;
+        const username = (decodedToken as Token).username;
+
         const retirevedPDFArray = await pdf.find({ pdf_id: pdfID }).exec();
         if (!retirevedPDFArray || retirevedPDFArray.length === 0) {
             return res.status(404).json({
@@ -78,10 +80,11 @@ export const getAllQueriesbyUsernameAndPDF = async (req: Request, res: Response)
                 message: "No such PDF exists",
             });
         }
-        const selectedQueries = await query.find({ user_id, pdf_id: pdfID }).exec();
+
+        const selectedQueries = await query.find({ user_id: username, pdf_id: pdfID }).exec();
 
         interaction.create({
-            user_id,
+            username,
             interaction_type: "Get",
             interaction_details: "Queries retrieved",
         });
@@ -111,11 +114,12 @@ export const getQuerybyID = async (req: Request, res: Response) => {
             });
         }
         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const user_id = (decodedToken as Token).id;
-        const selectedQuery = query.findOne({ user_id, query_id: queryID }).exec();
+        const username = (decodedToken as Token).username;
+
+        const selectedQuery = query.findOne({ user_id: username, query_id: queryID }).exec();
 
         interaction.create({
-            user_id,
+            username,
             interaction_type: "Get",
             interaction_details: "Query retrieved",
         });
@@ -145,9 +149,9 @@ export const updateQuery = async (req: Request, res: Response) => {
             });
         }
         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const user_id = (decodedToken as Token).id;
+        const username = (decodedToken as Token).username;
         
-        const retirevedQueryArray = await query.find({ query_id: queryID, user_id: user_id }).exec();
+        const retirevedQueryArray = await query.find({ query_id: queryID, user_id: username }).exec();
         if (!retirevedQueryArray || retirevedQueryArray.length === 0) {
             return res.status(404).json({
                 status: false,
@@ -159,7 +163,7 @@ export const updateQuery = async (req: Request, res: Response) => {
             req.body;
         
         await query.updateOne(
-            { query_id: queryID, user_id: user_id },
+            { query_id: queryID, username: username },
             {
                 query_text,
                 query_response,
@@ -169,7 +173,7 @@ export const updateQuery = async (req: Request, res: Response) => {
         );
 
         interaction.create({
-            user_id,
+            username,
             interaction_type: "Update",
             interaction_details: "Query updated",
         });
@@ -198,9 +202,9 @@ export const deleteQuery = async (req: Request, res: Response) => {
             });
         }
         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const user_id = (decodedToken as Token).id;
+        const username = (decodedToken as Token).username;
         
-        const retirevedQueryArray = await query.find({ query_id: queryID, user_id: user_id }).exec();
+        const retirevedQueryArray = await query.find({ query_id: queryID, user_id: username }).exec();
         if (!retirevedQueryArray || retirevedQueryArray.length === 0) {
             return res.status(404).json({
                 status: false,
@@ -208,10 +212,10 @@ export const deleteQuery = async (req: Request, res: Response) => {
             });
         }
 
-        await query.deleteOne({ query_id: queryID, user_id: user_id }).exec();
+        await query.deleteOne({ query_id: queryID, username: username }).exec();
 
         interaction.create({
-            user_id,
+            username,
             interaction_type: "Delete",
             interaction_details: "Query deleted",
         });
@@ -252,7 +256,7 @@ export const getAllQueries = async (req: Request, res: Response) => {
         const results = await query.find().exec();
 
         interaction.create({
-            user_id: (decodedToken as Token).id,
+            username: (decodedToken as Token).username,
             interaction_type: "Get",
             interaction_details: "All queries retrieved (admin)",
         });

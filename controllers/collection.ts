@@ -17,10 +17,10 @@ import { Role } from "../enums/role";
 
 export const createCollection = async (req: Request, res: Response) => {
     try {
-        const { user_id, pdf_id, collection_name, collection_description } = req.body;
+        const { user_id: username, pdf_id, collection_name, collection_description } = req.body;
 
         const savedCollection = await collection.create({
-            user_id,
+            username,
             pdf_id,
             collection_name,
             collection_description,

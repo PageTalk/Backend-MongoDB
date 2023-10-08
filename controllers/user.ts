@@ -49,7 +49,6 @@ export const createUser = async (req: Request, res: Response) => {
         console.log(savedUser);
 
         const payloadData: Token = {
-            id: savedUser.user_id,
             username,
             email,
             role: Role.user,
@@ -59,7 +58,7 @@ export const createUser = async (req: Request, res: Response) => {
         const authToken = jwt.sign(payloadData, process.env.JWT_SECRET!);
     
         interaction.create({
-            user_id: savedUser.user_id,
+            username: savedUser.username,
             interaction_type: "Sign-up",
             interaction_details: "user signed up",
         });
@@ -67,7 +66,7 @@ export const createUser = async (req: Request, res: Response) => {
         return res.status(201).json({
             status: true,
             message: "User created successfully",
-            id: savedUser.user_id,
+            username,
             authToken,
         });
     } catch (error) {
@@ -104,7 +103,6 @@ export const loginUser = async (req: Request, res: Response) => {
         }
 
         const payloadData: Token = {
-            id: retrievedUser.user_id,
             username,
             email: retrievedUser.email,
             role: (retrievedUser.role) as Role,
@@ -114,7 +112,7 @@ export const loginUser = async (req: Request, res: Response) => {
         const authToken = jwt.sign(payloadData, process.env.JWT_SECRET!);
 
         interaction.create({
-            user_id: retrievedUser.user_id,
+            username,
             interaction_type: "Login",
             interaction_details: "User logged in",
         });
@@ -151,16 +149,16 @@ export const updateUser = async (req: Request, res: Response) => {
                 message: "You are not authorized to perform this action",
             });
         }
-        const user_id = (decodedToken as Token).id;
+
         const { first_name, last_name, phone, email, password } = req.body;
         const updatedUser = await user.findOneAndUpdate(
-            { user_id },
+            { username },
             { first_name, last_name, phone, email, password },
             { new: true }
         );
 
         interaction.create({
-            user_id: updatedUser!.user_id,
+            username,
             interaction_type: "Update",
             interaction_details: "User updated",
         });
@@ -202,7 +200,7 @@ export const getUserByUsername = async (req: Request, res: Response) => {
         const userList = await user.find({ username }).exec();
 
         interaction.create({
-            user_id: userList[0].user_id,
+            username,
             interaction_type: "Get",
             interaction_details: "User retrieved",
         });
@@ -234,6 +232,8 @@ export const getAllUsers = async (req: Request, res: Response) => {
         }
         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
         const role = (decodedToken as Token).role;
+        const username = (decodedToken as Token).username;
+        
         if (role !== Role.admin) {
             return res.status(403).json({
                 status: false,
@@ -243,7 +243,7 @@ export const getAllUsers = async (req: Request, res: Response) => {
         const userList = await user.find().exec();
 
         interaction.create({
-            user_id: userList[0].user_id,
+            username,
             interaction_type: "Get",
             interaction_details: "All users retrieved",
         });

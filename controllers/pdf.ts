@@ -31,7 +31,7 @@ export const uploadPDF = async (req: Request, res: Response) => {
             });
         }
         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const user_id = (decodedToken as Token).id;
+        const username = (decodedToken as Token).username;
 
         const upload = multer({
             storage: multer.memoryStorage(),
@@ -73,12 +73,12 @@ export const uploadPDF = async (req: Request, res: Response) => {
                 const fileUrl = `https://storage.googleapis.com/${bucket.name}/${fileBlob.name}`;
 
                 await pdf.create({
-                    user_id,
+                    username,
                     url: fileUrl,
                 });
 
                 interaction.create({
-                    user_id,
+                    username,
                     interaction_type: "Upload PDF",
                     interaction_details: "PDF uploaded",
                 });
@@ -120,12 +120,12 @@ export const retrievePDF = async (req: Request, res: Response) => {
             });
         }
 
-        const user_id = (decodedToken as Token).id;
+        const username = (decodedToken as Token).username;
         
-        const pdfArray = await pdf.find({ user_id: user_id }).exec();
+        const pdfArray = await pdf.find({ username: username }).exec();
 
         interaction.create({
-            user_id,
+            username,
             interaction_type: "Get PDF",
             interaction_details: "PDF retrieved",
         });
