@@ -2,7 +2,7 @@ import { Document } from "mongoose";
 
 export interface pdfInterface extends Document {
     pdf_id: number;
-    user_id: number;
+    username: string;
     url: string;
     title: string;
     description: string;

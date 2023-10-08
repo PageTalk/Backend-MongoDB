@@ -2,7 +2,7 @@ import { Document } from "mongoose";
 
 export interface queryInterface extends Document {
     query_id: number;
-    user_id: number;
+    username: string;
     pdf_id: number;
     query_text: string;
     query_response: string;
