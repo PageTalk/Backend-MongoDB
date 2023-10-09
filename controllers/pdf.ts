@@ -1,7 +1,7 @@
 import * as dotenv from "dotenv";
 dotenv.config(); // Load environment variables from .env file
 import multer from "multer";
-import admin from "firebase-admin";
+import * as admin from "firebase-admin";
 import { Request, Response, NextFunction } from "express";
 import { v4 as uuidv4 } from "uuid";
 var path = require("path");
@@ -72,6 +72,18 @@ export const uploadPDF = async (req: Request, res: Response) => {
             blobStream.on("finish", async () => {
                 const fileUrl = `https://storage.googleapis.com/${bucket.name}/${fileBlob.name}`;
 
+                const expirationDate = new Date();
+                // Set the expiration date to 7 days from the current date and time
+                expirationDate.setDate(expirationDate.getDate() + 7);
+
+                // Format the expiration date as an ISO 8601 string
+                const formattedExpiration = expirationDate.toISOString();
+
+                const [url] = await fileBlob.getSignedUrl({
+                    action: "read",
+                    expires: formattedExpiration, // Specify an expiration time for the URL
+                });
+
                 await pdf.create({
                     username,
                     url: fileUrl,
@@ -82,11 +94,12 @@ export const uploadPDF = async (req: Request, res: Response) => {
                     interaction_type: "Upload PDF",
                     interaction_details: "PDF uploaded",
                 });
-                
+
                 return res.status(201).json({
                     status: true,
                     message: "PDF uploaded successfully",
                     url: fileUrl,
+                    downloadURL: url,
                 });
             });
 
@@ -121,7 +134,7 @@ export const retrievePDF = async (req: Request, res: Response) => {
         }
 
         const username = (decodedToken as Token).username;
-        
+
         const pdfArray = await pdf.find({ username: username }).exec();
 
         interaction.create({
