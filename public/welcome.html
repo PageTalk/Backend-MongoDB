@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PageTalk Backend</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .tech-stack {
+            font-weight: bold;
+        }
+
+        .tech-list {
+            list-style-type: disc;
+            margin-left: 20px;
+        }
+
+        .code-block {
+            background-color: #f0f0f0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .database-diagram {
+            margin-top: 20px;
+            max-width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <h1>PageTalk (Backend)</h1>
+    <p>Welcome to the backend of the PageTalk project. PageTalk allows users to upload PDFs and receive summaries, along with query-based responses.</p>
+
+    <div class="tech-stack">Tech Stack:</div>
+    <ul class="tech-list">
+        <li>ExpressJS</li>
+        <li>TypeScript</li>
+        <li>Docker</li>
+        <li>Firebase Cloud Storage</li>
+    </ul>
+
+    <div class="tech-stack">Technologies Used:</div>
+    <ul class="tech-list">
+        <li><strong>JWT</strong>: For secure header authentication and verification</li>
+        <li><strong>bcrypt</strong>: For password storage and retrieval</li>
+        <li><strong>body-parser</strong> and <strong>url-encoded</strong>: Middleware for parsing request bodies</li>
+    </ul>
+
+    <p>Tables:</p>
+    <ol class="tech-list">
+        <li>Users</li>
+        <li>Query</li>
+        <li>PDF</li>
+        <li>Admin</li>
+        <li>Collection</li>
+        <li>Interaction</li>
+    </ol>
+
+    <p>Try it yourself:</p>
+    <ol class="tech-list">
+        <li>Clone the repository:</li>
+        <div class="code-block">git clone https://github.com/PageTalk/Backend.git</div>
+        <li>Configure your environment variables as in the .env.example file</li>
+        <li>Configure the docker-compose file on your end</li>
+        <li>Open a terminal, CD to this folder, and run</li>
+        <div class="code-block">docker-compose up -d</div>
+        <li>Start the docker container, then create the tables as mentioned in the database/init.sql file.</li>
+        <li>Run</li>
+        <div class="code-block">npm start</div>
+        <li>Your application is now running.</li>
+    </ol>
+
+    <p>Database Diagram:</p>
+    <img class="database-diagram" src="https://github.com/PageTalk/Backend/blob/5d19a46daa0b7e56e5d29d224f3df6b56cd1eb73/screenshots/PageTalk.png" alt="Database Diagram">
+
+    <p>Starting</p>
+    <p>Start the docker container, then run</p>
+    <div class="code-block">docker exec -it pagetalk-mysql-container bash</div>
+    <p>To start a MySQL server, run</p>
+    <div class="code-block">mysql -u root -p</div>
+    <p>Enter password: 1234</p>
+
+    <p>Troubleshooting</p>
+    <p>Incase of SQL Connection error</p>
+    <p>Run the following command in the MySQL server</p>
+    <div class="code-block">ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '1234';</div>
+    <p>Note: Server is running on port 3306 so add the port to the dbconfig while creating a connection.</p>
+
+    <p>If connection still fails</p>
+    <p>If the connection still fails, go into the MySQL Container files, look for etc/my.cnf config file, and set port to 3306.</p>
+    <div class="code-block">// my.cnf
+---- previous code
+port=3306
+---- rest of the code</div>
+
+    <p>How JWT Works</p>
+    <img src="https://i.stack.imgur.com/b2dzI.png" alt="JWT Working Showcase">
+
+    <p>How JWT is used</p>
+    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210925202132/Untitled1-660x404.png" alt="JWT Usage Example">
+
+    <p>Credits: GeeksForGeeks</p>
+
+    <p>How to use JWT</p>
+    <ol class="tech-list">
+        <li>User sends a POST request to the server with username and password</li>
+        <li>Server checks if the username and password are correct</li>
+        <li>If correct, the server creates a JWT token and sends it back to the user</li>
+        <li>User stores the JWT token in the local storage</li>
+        <li>User sends the JWT token in the header of every request</li>
+        <li>Server checks if the JWT token is valid</li>
+        <li>If valid, the server sends the response back to the user</li>
+    </ol>
+</body>
+</html>

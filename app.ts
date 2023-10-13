@@ -3,6 +3,7 @@ dotenv.config(); // Load environment variables from .env file
 import express from "express";
 var bodyParser = require("body-parser");
 const cors = require("cors");
+var path = require("path");
 
 import { connectDB } from "./database/connection";
 
@@ -27,7 +28,7 @@ app.use(cors({
 app.use(express.static("./public"));
 
 app.get("/", (req, res) => {
-    res.send("Hello World!");
+    res.sendFile(path.resolve("public/welcome.html"));
 });
 
 // Routes
