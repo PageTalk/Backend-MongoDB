@@ -3,15 +3,32 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PageTalk Backend</title>
+    <title>PageTalk (Backend)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            margin: 20px;
+            background-color: #f3f3f3;
+            margin: 0;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            margin: 20px auto;
+            max-width: 800px;
         }
 
         h1 {
             color: #333;
+            font-size: 24px;
+        }
+
+        h2 {
+            color: #555;
+            font-size: 20px;
         }
 
         .tech-stack {
@@ -30,94 +47,130 @@
         }
 
         .database-diagram {
-            margin-top: 20px;
+            max-width: 100%;
+        }
+
+        .steps {
+            list-style-type: decimal;
+            margin-left: 20px;
+        }
+
+        img {
             max-width: 100%;
         }
     </style>
 </head>
 <body>
-    <h1>PageTalk (Backend)</h1>
-    <p>Welcome to the backend of the PageTalk project. PageTalk allows users to upload PDFs and receive summaries, along with query-based responses.</p>
+    <div class="container">
+        <h1>PageTalk (Backend)</h1>
+        <p>Welcome to the backend of the PageTalk project. PageTalk allows users to upload PDFs and receive summaries, along with query-based responses.</p>
 
-    <div class="tech-stack">Tech Stack:</div>
-    <ul class="tech-list">
-        <li>ExpressJS</li>
-        <li>TypeScript</li>
-        <li>Docker</li>
-        <li>Firebase Cloud Storage</li>
-    </ul>
+        <h2 class="tech-stack">Tech Stack:</h2>
+        <ul class="tech-list">
+            <li>ExpressJS</li>
+            <li>TypeScript</li>
+            <li>Docker</li>
+            <li>Firebase Cloud Storage</li>
+        </ul>
 
-    <div class="tech-stack">Technologies Used:</div>
-    <ul class="tech-list">
-        <li><strong>JWT</strong>: For secure header authentication and verification</li>
-        <li><strong>bcrypt</strong>: For password storage and retrieval</li>
-        <li><strong>body-parser</strong> and <strong>url-encoded</strong>: Middleware for parsing request bodies</li>
-    </ul>
+        <h2 class="tech-stack">Technologies Used:</h2>
+        <ul class="tech-list">
+            <li><strong>JWT</strong>: For secure header authentication and verification</li>
+            <li><strong>bcrypt</strong>: For password storage and retrieval</li>
+            <li><strong>body-parser</strong> and <strong>url-encoded</strong>: Middleware for parsing request bodies</li>
+        </ul>
 
-    <p>Tables:</p>
-    <ol class="tech-list">
-        <li>Users</li>
-        <li>Query</li>
-        <li>PDF</li>
-        <li>Admin</li>
-        <li>Collection</li>
-        <li>Interaction</li>
-    </ol>
+        <h2>Tables:</h2>
+        <ol class="tech-list">
+            <li>Users</li>
+            <li>Query</li>
+            <li>PDF</li>
+            <li>Admin</li>
+            <li>Collection</li>
+            <li>Interaction</li>
+        </ol>
 
-    <p>Try it yourself:</p>
-    <ol class="tech-list">
-        <li>Clone the repository:</li>
-        <div class="code-block">git clone https://github.com/PageTalk/Backend.git</div>
-        <li>Configure your environment variables as in the .env.example file</li>
-        <li>Configure the docker-compose file on your end</li>
-        <li>Open a terminal, CD to this folder, and run</li>
-        <div class="code-block">docker-compose up -d</div>
-        <li>Start the docker container, then create the tables as mentioned in the database/init.sql file.</li>
-        <li>Run</li>
-        <div class="code-block">npm start</div>
-        <li>Your application is now running.</li>
-    </ol>
+        <h2>Routes:</h2>
+        <ul class="tech-list">
+            <li>User:
+                <ul class="steps">
+                    <li><code>/user/login</code> (POST: Login User)</li>
+                    <li><code>/user/:username</code> (POST: Create User, GET: Retrieve User, PATCH: Update User)</li>
+                </ul>
+            </li>
+            <li>Query:
+                <ul class="steps">
+                    <li><code>/query/:pdfID</code> (POST: Create Query, GET: Retrieve Query by Username and PDF)</li>
+                    <li><code>/query/:queryID</code> (GET: Retrieve Query by ID, PATCH: Update Query by ID, DELETE: Delete Query by ID)</li>
+                </ul>
+            </li>
+            <li>PDF:
+                <ul class="steps">
+                    <li><code>/pdf/</code> (POST: Create PDF)</li>
+                    <li><code>/pdf/:pdfID</code> (GET: Retrieve PDF by ID)</li>
+                </ul>
+            </li>
+        </ul>
 
-    <p>Database Diagram:</p>
-    <img class="database-diagram" src="https://github.com/PageTalk/Backend/blob/5d19a46daa0b7e56e5d29d224f3df6b56cd1eb73/screenshots/PageTalk.png" alt="Database Diagram">
+        <h2>Try it yourself:</h2>
+        <ol class="tech-list">
+            <li>Clone the repository:
+                <div class="code-block">git clone https://github.com/PageTalk/Backend.git</div>
+            </li>
+            <li>Configure your environment variables as in the <code>.env.example</code> file</li>
+            <li>Configure the docker-compose file on your end</li>
+            <li>Open a terminal, CD to this folder, and run
+                <div class="code-block">docker-compose up -d</div>
+            </li>
+            <li>Start the docker container, then create the tables as mentioned in the <code>database/init.sql</code> file.</li>
+            <li>Run
+                <div class="code-block">npm start</div>
+            </li>
+            <li>Your application is now running.</li>
+        </ol>
 
-    <p>Starting</p>
-    <p>Start the docker container, then run</p>
-    <div class="code-block">docker exec -it pagetalk-mysql-container bash</div>
-    <p>To start a MySQL server, run</p>
-    <div class="code-block">mysql -u root -p</div>
-    <p>Enter password: 1234</p>
+        <h2>Database Diagram:</h2>
+        <img class="database-diagram" src="https://github.com/PageTalk/Backend/blob/4ab41021afab6c2e7b1a2a915f0017d4a41e94d0/screenshots/PageTalk.png" alt="Database Diagram">
 
-    <p>Troubleshooting</p>
-    <p>Incase of SQL Connection error</p>
-    <p>Run the following command in the MySQL server</p>
-    <div class="code-block">ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '1234';</div>
-    <p>Note: Server is running on port 3306 so add the port to the dbconfig while creating a connection.</p>
+        <h2>Starting</h2>
+        <p>Start the docker container, then run</p>
+        <div class="code-block">docker exec -it pagetalk-mysql-container bash</div>
+        <p>To start a MySQL server, run</p>
+        <div class="code-block">mysql -u root -p</div>
+        <p>Enter password: 1234</p>
 
-    <p>If connection still fails</p>
-    <p>If the connection still fails, go into the MySQL Container files, look for etc/my.cnf config file, and set port to 3306.</p>
-    <div class="code-block">// my.cnf
----- previous code
-port=3306
----- rest of the code</div>
+        <h2>Troubleshooting</h2>
+        <p><strong>In case of SQL Connection error</strong></p>
+        <p>Run the following command in the MySQL server</p>
+        <div class="code-block">ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '1234';</div>
+        <p>Note: Server is running on port 3306 so add the port to the dbconfig while creating a connection.</p>
 
-    <p>How JWT Works</p>
-    <img src="https://i.stack.imgur.com/b2dzI.png" alt="JWT Working Showcase">
+        <p><strong>If connection still fails</strong></p>
+        <p>If the connection still fails, go into the MySQL Container files, look for <code>etc/my.cnf</code> config file, and set port to 3306.</p>
+        <div class="code-block">
+            // my.cnf
+            ---- previous code
+            port=3306
+            ---- rest of the code
+        </div>
 
-    <p>How JWT is used</p>
-    <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210925202132/Untitled1-660x404.png" alt="JWT Usage Example">
+        <h2>How JWT Works</h2>
+        <img src="https://i.stack.imgur.com/b2dzI.png" alt="JWT Working Showcase">
 
-    <p>Credits: GeeksForGeeks</p>
+        <h2>How JWT is used</h2>
+        <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210925202132/Untitled1-660x404.png" alt="JWT Usage Example">
+        <p>Credits: GeeksForGeeks</p>
 
-    <p>How to use JWT</p>
-    <ol class="tech-list">
-        <li>User sends a POST request to the server with username and password</li>
-        <li>Server checks if the username and password are correct</li>
-        <li>If correct, the server creates a JWT token and sends it back to the user</li>
-        <li>User stores the JWT token in the local storage</li>
-        <li>User sends the JWT token in the header of every request</li>
-        <li>Server checks if the JWT token is valid</li>
-        <li>If valid, the server sends the response back to the user</li>
-    </ol>
+        <h2>How to use JWT</h2>
+        <ol class="tech-list">
+            <li>User sends a POST request to the server with username and password</li>
+            <li>Server checks if the username and password are correct</li>
+            <li>If correct, the server creates a JWT token and sends it back to the user</li>
+            <li>User stores the JWT token in the local storage</li>
+            <li>User sends the JWT token in the header of every request</li>
+            <li>Server checks if the JWT token is valid</li>
+            <li>If valid, the server sends the response back to the user</li>
+        </ol>
+    </div>
 </body>
 </html>
