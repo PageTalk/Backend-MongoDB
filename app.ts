@@ -13,7 +13,7 @@ import PdfRouter from "./routes/pdf";
 import CollectionRouter from "./routes/collection";
 
 const app = express();
-const port = process.env.PORT || 3000;
+const port = 6000;
 
 // Middleware
 app.use(cors);
