@@ -13,15 +13,22 @@ import PdfRouter from "./routes/pdf";
 import CollectionRouter from "./routes/collection";
 
 const app = express();
-const port = 6000;
+const port = 5432;
 
 // Middleware
-app.use(cors);
+
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(cors({
+    origin: 'http://localhost:3000'
+}));
 
 // Static Files directory
 app.use(express.static("./public"));
+
+app.get("/", (req, res) => {
+    res.send("Hello World!");
+});
 
 // Routes
 
