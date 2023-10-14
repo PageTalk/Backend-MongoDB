@@ -1,6 +1,18 @@
-import { Schema, model } from "mongoose";
-import { pdfInterface } from "../interfaces/pdf";
+import { Schema, model, Document } from "mongoose";
 import { getNextSequenceValue } from "../functions/getNextSequence";
+export interface pdfInterface extends Document {
+    pdf_id: number;
+    username: string;
+    url: string;
+    title: string;
+    description: string;
+    upload_timestamp: Date;
+    tokenized_text: string;
+    pdf_metadata: {
+        created_at: Date;
+        updated_at: Date;
+    };
+}
 
 const pdfSchema = new Schema<pdfInterface>({
     pdf_id: Number,
@@ -8,9 +20,9 @@ const pdfSchema = new Schema<pdfInterface>({
     url: { type: String, required: true },
     title: { type: String, default: "" },
     description: String,
-    upload_timestamp: { 
-        type: Date, 
-        default: Date.now
+    upload_timestamp: {
+        type: Date,
+        default: Date.now,
     },
     tokenized_text: { type: String, default: "" },
     pdf_metadata: {
@@ -20,7 +32,7 @@ const pdfSchema = new Schema<pdfInterface>({
 });
 
 pdfSchema.pre("save", async function (this: pdfInterface, next) {
-    if(this.isNew) {
+    if (this.isNew) {
         try {
             const seqValue = await getNextSequenceValue("pdf");
             this.pdf_id = seqValue;
