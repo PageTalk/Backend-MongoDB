@@ -73,8 +73,8 @@ export const uploadPDF = async (req: Request, res: Response) => {
                 const fileUrl = `https://storage.googleapis.com/${bucket.name}/${fileBlob.name}`;
 
                 const expirationDate = new Date();
-                // Set the expiration date to 7 days from the current date and time
-                expirationDate.setDate(expirationDate.getDate() + 7);
+                // Set the expiration date to 60 days from the current date and time
+                expirationDate.setDate(expirationDate.getDate() + 60);
 
                 // Format the expiration date as an ISO 8601 string
                 const formattedExpiration = expirationDate.toISOString();
