@@ -87,6 +87,7 @@ export const uploadPDF = async (req: Request, res: Response) => {
                 await pdf.create({
                     username,
                     url: fileUrl,
+                    downloadURL: url,
                 });
 
                 interaction.create({

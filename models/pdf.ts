@@ -4,6 +4,7 @@ export interface pdfInterface extends Document {
     pdf_id: number;
     username: string;
     url: string;
+    downloadURL: string;
     title: string;
     description: string;
     upload_timestamp: Date;
@@ -18,6 +19,7 @@ const pdfSchema = new Schema<pdfInterface>({
     pdf_id: Number,
     username: { type: String, required: true },
     url: { type: String, required: true },
+    downloadURL: { type: String, required: true },
     title: { type: String, default: "" },
     description: String,
     upload_timestamp: {
