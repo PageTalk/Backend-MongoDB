@@ -20,9 +20,11 @@ const port = 5432;
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(cors({
-    origin: 'http://localhost:3000'
-}));
+app.use(
+    cors({
+        origin: "http://localhost:3000",
+    })
+);
 
 // Static Files directory
 app.use(express.static("./public"));
@@ -39,6 +41,10 @@ app.use("/admin", AdminRouter);
 app.use("/queries", QueryRouter);
 app.use("/pdf", PdfRouter);
 app.use("/collection", CollectionRouter);
+
+app.head("/", (req, res) => {
+    res.status(200).end();
+});
 
 // Starting Server
 const start = async () => {
