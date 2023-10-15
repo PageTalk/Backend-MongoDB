@@ -26,7 +26,6 @@ app.use(
         origin: "http://localhost:3000",
     })
 );
-app.use(notFoundMiddleware);
 
 // Static Files directory
 app.use(express.static("./public"));
@@ -36,13 +35,13 @@ app.get("/", (req, res) => {
 });
 
 // Routes
-
-// clean routes (ex. api/v1/{user}/pdf and then upload etc.)
 app.use("/user", UserRouter);
 app.use("/admin", AdminRouter);
 app.use("/queries", QueryRouter);
 app.use("/pdf", PdfRouter);
 app.use("/collection", CollectionRouter);
+
+app.use(notFoundMiddleware);
 
 app.head("/", (req, res) => {
     res.status(200).end();
