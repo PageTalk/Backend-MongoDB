@@ -30,8 +30,12 @@ app.use(
 // Static Files directory
 app.use(express.static("./public"));
 
+app.head("/", (req, res) => {
+    return res.status(200).end();
+});
+
 app.get("/", (req, res) => {
-    res.sendFile(path.resolve("public/welcome.html"));
+    return res.status(200).sendFile(path.resolve("public/welcome.html"));
 });
 
 // Routes
@@ -42,10 +46,6 @@ app.use("/pdf", PdfRouter);
 app.use("/collection", CollectionRouter);
 
 app.use(notFoundMiddleware);
-
-app.head("/", (req, res) => {
-    res.status(200).end();
-});
 
 // Starting Server
 const start = async () => {
