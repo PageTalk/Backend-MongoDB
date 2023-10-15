@@ -6,6 +6,7 @@ const cors = require("cors");
 var path = require("path");
 
 import { connectDB } from "./database/connection";
+const notFoundMiddleware = require("./middleware/not-found");
 
 import UserRouter from "./routes/user";
 import AdminRouter from "./routes/admin";
@@ -25,6 +26,7 @@ app.use(
         origin: "http://localhost:3000",
     })
 );
+app.use(notFoundMiddleware);
 
 // Static Files directory
 app.use(express.static("./public"));
