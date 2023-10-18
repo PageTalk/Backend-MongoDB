@@ -18,10 +18,9 @@ const app = express();
 const port = 5432;
 
 // Middleware
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(
+app.use(        // Enabled CORS so that the backend can be called from a frontend
     cors({
         origin: "http://localhost:3000",
     })
@@ -30,10 +29,12 @@ app.use(
 // Static Files directory
 app.use(express.static("./public"));
 
+// Head request at '/' route for UptimeRobot to keep the backend running and prevent inactivity
 app.head("/", (req, res) => {
     return res.status(200).end();
 });
 
+// Project Description HTML Page at GET Request on '/'
 app.get("/", (req, res) => {
     return res.status(200).sendFile(path.resolve("public/welcome.html"));
 });
