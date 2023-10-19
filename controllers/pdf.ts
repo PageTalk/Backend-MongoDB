@@ -92,8 +92,9 @@ export const uploadPDF = async (req: Request, res: Response) => {
                 await pdf.create({
                     username,
                     url: fileUrl,
+                    title: file.originalname,
                     downloadURL: url,
-                    size: bytesToMegabytes(file.size)
+                    size: bytesToMegabytes(file.size),
                 });
 
                 interaction.create({
