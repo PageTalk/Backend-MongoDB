@@ -19,6 +19,11 @@ admin.initializeApp({
     storageBucket: "page-talk.appspot.com",
 });
 
+function bytesToMegabytes(bytes: number): string {
+    const megabytes = bytes / (1024 * 1024);
+    return megabytes.toFixed(1) + " MB";
+}
+
 const storage = admin.storage();
 
 export const uploadPDF = async (req: Request, res: Response) => {
@@ -88,6 +93,7 @@ export const uploadPDF = async (req: Request, res: Response) => {
                     username,
                     url: fileUrl,
                     downloadURL: url,
+                    size: bytesToMegabytes(file.size)
                 });
 
                 interaction.create({
@@ -127,14 +133,14 @@ export const retrievePDF = async (req: Request, res: Response) => {
         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
         const role = (decodedToken as Token).role;
 
-        if (role !== Role.admin) {
+        const username = (decodedToken as Token).username;
+
+        if (username !== (decodedToken as Token).username) {
             return res.status(403).json({
                 status: false,
                 message: "You are not authorized to perform this action",
             });
         }
-
-        const username = (decodedToken as Token).username;
 
         const pdfArray = await pdf.find({ username: username }).exec();
 
