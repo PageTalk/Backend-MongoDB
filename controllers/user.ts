@@ -67,6 +67,10 @@ export const createUser = async (req: Request, res: Response) => {
             status: true,
             message: "User created successfully",
             username,
+            first_name,
+            last_name,
+            phone,
+            email,
             authToken,
         });
     } catch (error) {
@@ -110,6 +114,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
         // Creating a JWT token
         const authToken = jwt.sign(payloadData, process.env.JWT_SECRET!);
+        const { first_name, last_name, phone, email } = retrievedUser;
 
         interaction.create({
             username,
@@ -120,7 +125,12 @@ export const loginUser = async (req: Request, res: Response) => {
         return res.status(200).json({
             status: true,
             message: "User Login successful",
+            username,
             authToken,
+            phone,
+            email,
+            first_name,
+            last_name
         });
     } catch (error) {
         return res.status(500).json({
