@@ -52,6 +52,7 @@ export const createUser = async (req: Request, res: Response) => {
             username,
             email,
             role: Role.user,
+            user_id: savedUser._id.toString()
         };
 
         // Creating a JWT token
@@ -59,6 +60,7 @@ export const createUser = async (req: Request, res: Response) => {
     
         interaction.create({
             username: savedUser.username,
+            user_id: savedUser._id,
             interaction_type: "Sign-up",
             interaction_details: "user signed up",
         });
@@ -72,6 +74,7 @@ export const createUser = async (req: Request, res: Response) => {
             phone,
             email,
             authToken,
+            user_id: savedUser._id.toString(),
         });
     } catch (error) {
         return res.status(500).json({
@@ -108,6 +111,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
         const payloadData: Token = {
             username,
+            user_id: retrievedUser._id.toString(),
             email: retrievedUser.email,
             role: (retrievedUser.role) as Role,
         };
@@ -118,6 +122,7 @@ export const loginUser = async (req: Request, res: Response) => {
 
         interaction.create({
             username,
+            user_id: retrievedUser._id,
             interaction_type: "Login",
             interaction_details: "User logged in",
         });
@@ -129,6 +134,7 @@ export const loginUser = async (req: Request, res: Response) => {
             authToken,
             phone,
             email,
+            user_id: retrievedUser._id.toString(),
             first_name,
             last_name
         });
@@ -169,6 +175,7 @@ export const updateUser = async (req: Request, res: Response) => {
 
         interaction.create({
             username,
+            user_id: updatedUser!._id,
             interaction_type: "Update",
             interaction_details: "User updated",
         });
@@ -176,7 +183,8 @@ export const updateUser = async (req: Request, res: Response) => {
         return res.status(200).json({
             status: true,
             message: "User updated successfully",
-            updatedUser
+            updatedUser,
+            user_id: updatedUser!._id.toString(),
         });
     } catch (error) {
         return res.status(500).json({
