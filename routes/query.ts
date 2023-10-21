@@ -1,28 +1,25 @@
-import express from "express";
-const router = express.Router();
+// import express from "express";
+// const router = express.Router();
 
-import {
-    sendQuery,
-    getAllQueriesbyUsernameAndPDF,
-    getQuerybyID,
-    updateQuery,
-    deleteQuery,
-    getAllQueries,
-} from "../controllers/query";
+// import {
+//     sendQuery,
+//     getAllQueriesbyUsernameAndPDF,
+//     getQuerybyID,
+//     addResponseToQuery,
+//     deleteQuery,
+//     getAllQueries,
+// } from "../controllers/query";
 
-router
-    .route("/:pdfID")
-    .get(getAllQueriesbyUsernameAndPDF)
-    .post(sendQuery);
+// router.route("/:pdfID").get(getAllQueriesbyUsernameAndPDF).post(sendQuery);
 
-router
-    .route("/:queryID")
-    .get(getQuerybyID)
-    .patch(updateQuery)
-    .delete(deleteQuery);
+// router
+//     .route("/:queryID")
+//     .get(getQuerybyID)
+//     .patch(addResponseToQuery)
+//     .delete(deleteQuery);
 
-router.route("/").get(getAllQueries);
+// router.route("/").get(getAllQueries);
 
-export default router;
+// export default router;
 
-// TODO: Add Query routes
+// // TODO: Add Query routes
