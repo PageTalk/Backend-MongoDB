@@ -2,18 +2,16 @@ import { Schema, model, Document } from "mongoose";
 import { getNextSequenceValue } from "../functions/getNextSequence";
 
 export interface interactionInterface extends Document {
-    interaction_id: number;
     username: string;
-    collection_id: number;
+    user_id: Schema.Types.ObjectId;
     timestamp: Date;
     interaction_type: string;
     interaction_details: string;
 }
 
 const interactionSchema = new Schema<interactionInterface>({
-    interaction_id: Number,
     username: String,
-    collection_id: Number,
+    user_id: { type: Schema.Types.ObjectId, ref: "User" },
     timestamp: {
         type: Date,
         default: Date.now,
@@ -27,23 +25,6 @@ const interactionSchema = new Schema<interactionInterface>({
         default: "",
     },
 });
-
-interactionSchema.pre(
-    "save",
-    async function (this: interactionInterface, next) {
-        if (this.isNew) {
-            try {
-                const seqValue = await getNextSequenceValue("interaction");
-                this.interaction_id = seqValue;
-                next();
-            } catch (error: any) {
-                next(error);
-            }
-        } else {
-            next();
-        }
-    }
-);
 
 export const interaction = model<interactionInterface>(
     "Interaction",
