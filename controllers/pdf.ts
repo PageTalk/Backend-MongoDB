@@ -91,6 +91,7 @@ export const uploadPDF = async (req: Request, res: Response) => {
 
                 await pdf.create({
                     username,
+                    user_id: (decodedToken as Token).user_id,
                     url: fileUrl,
                     title: file.originalname,
                     downloadURL: url,
@@ -132,9 +133,9 @@ export const retrievePDF = async (req: Request, res: Response) => {
             });
         }
         const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const role = (decodedToken as Token).role;
 
         const username = (decodedToken as Token).username;
+        const user_id = (decodedToken as Token).user_id;
 
         if (username !== (decodedToken as Token).username) {
             return res.status(403).json({
@@ -147,6 +148,7 @@ export const retrievePDF = async (req: Request, res: Response) => {
 
         interaction.create({
             username,
+            user_id,
             interaction_type: "Get PDF",
             interaction_details: "PDF retrieved",
         });
