@@ -11,6 +11,7 @@ import { interaction } from "../models/interaction";
 import { pdf } from "../models/pdf";
 import { Token } from "../interfaces/token";
 import { Role } from "../enums/role";
+import mongoose from "mongoose";
 
 // Initialize Firebase
 const serviceAccount = require("../page-talk-firebase-adminsdk-xfipa-265e33596f.json");
@@ -157,6 +158,54 @@ export const retrievePDF = async (req: Request, res: Response) => {
             status: true,
             message: "PDFs retrieved successfully",
             data: pdfArray,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            status: false,
+            message: "Some error occured",
+            error: error,
+        });
+    }
+};
+
+export const retrieveSinglePDF = async (req: Request, res: Response) => {
+    try {
+        const token = req.headers.authorization?.split(" ")[1];
+        if (!token) {
+            return res.status(200).json({
+                success: false,
+                message: "Error! Please provide a token.",
+            });
+        }
+        const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
+
+        const username = (decodedToken as Token).username;
+        const user_id = (decodedToken as Token).user_id;
+
+        if (username !== (decodedToken as Token).username) {
+            return res.status(403).json({
+                status: false,
+                message: "You are not authorized to perform this action",
+            });
+        }
+
+        const pdf_id = req.params.pdf_id;
+
+        const retrievedPDF = await pdf
+            .findOne({ _id: new mongoose.mongo.ObjectId(pdf_id) })
+            .exec();
+
+        interaction.create({
+            username,
+            user_id,
+            interaction_type: "Get PDF",
+            interaction_details: "PDF retrieved",
+        });
+
+        return res.status(200).json({
+            status: true,
+            message: "PDF retrieved successfully",
+            data: retrievedPDF,
         });
     } catch (error) {
         return res.status(500).json({
