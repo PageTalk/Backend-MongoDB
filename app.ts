@@ -10,9 +10,9 @@ const notFoundMiddleware = require("./middleware/not-found");
 
 import UserRouter from "./routes/user";
 import AdminRouter from "./routes/admin";
-import QueryRouter from "./routes/query";
 import PdfRouter from "./routes/pdf";
 import CollectionRouter from "./routes/collection";
+import MessageRouter from './routes/message';
 
 const app = express();
 const port = 5432;
@@ -42,9 +42,10 @@ app.get("/", (req, res) => {
 // Routes
 app.use("/user", UserRouter);
 app.use("/admin", AdminRouter);
-app.use("/queries", QueryRouter);
 app.use("/pdf", PdfRouter);
 app.use("/collection", CollectionRouter);
+app.use("/message", MessageRouter);
+
 
 app.use(notFoundMiddleware);
 
