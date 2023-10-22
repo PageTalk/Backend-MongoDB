@@ -1,12 +1,5 @@
-import * as dotenv from "dotenv";
-dotenv.config(); // Load environment variables from .env file
-import { Request, Response } from "express";
-import jwt from "jsonwebtoken";
 import { interaction } from "../models/interaction";
 import { query } from "../models/query";
-import { pdf } from "../models/pdf";
-import { Token } from "../interfaces/token";
-import { Role } from "../enums/role";
 import mongoose from "mongoose";
 
 export const sendQuery = async (
