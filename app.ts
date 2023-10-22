@@ -20,10 +20,11 @@ const port = 5432;
 // Middleware
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(        // Enabled CORS so that the backend can be called from a frontend
-    cors({
-        origin: "http://localhost:3000",
-    })
+app.use(
+  // Enable CORS for multiple origins
+  cors({
+    origin: ["http://localhost:3000", "https://frontend-pagetalk.vercel.app"],
+  })
 );
 
 // Static Files directory
@@ -31,12 +32,12 @@ app.use(express.static("./public"));
 
 // Head request at '/' route for UptimeRobot to keep the backend running and prevent inactivity
 app.head("/", (req, res) => {
-    return res.status(200).end();
+  return res.status(200).end();
 });
 
 // Project Description HTML Page at GET Request on '/'
 app.get("/", (req, res) => {
-    return res.status(200).sendFile(path.resolve("public/welcome.html"));
+  return res.status(200).sendFile(path.resolve("public/welcome.html"));
 });
 
 // Routes
@@ -46,20 +47,19 @@ app.use("/pdf", PdfRouter);
 app.use("/collection", CollectionRouter);
 app.use("/message", MessageRouter);
 
-
 app.use(notFoundMiddleware);
 
 // Starting Server
 const start = async () => {
-    try {
-        await connectDB(process.env.MONGO_URI!);
-        console.log("Successfully connected to MongoDB!");
-        app.listen(port, () => {
-            console.log(`Server is running on port ${port}`);
-        });
-    } catch (error) {
-        console.log(error);
-    }
+  try {
+    await connectDB(process.env.MONGO_URI!);
+    console.log("Successfully connected to MongoDB!");
+    app.listen(port, () => {
+      console.log(`Server is running on port ${port}`);
+    });
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 start();
