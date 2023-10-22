@@ -68,174 +68,108 @@ export const addResponseToQuery = async (
 };
 
 export const getAllQueriesbyUsernameAndPDF = async (
-    req: Request,
-    res: Response
+    username: string,
+    pdf_id: string,
+    user_id: string
 ) => {
     try {
-        const { pdfID } = req.params;
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-            return res.status(200).json({
-                success: false,
-                message: "Error! Please provide a token.",
-            });
-        }
-        const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const username = (decodedToken as Token).username;
-
-        const retirevedPDFArray = await pdf.find({ pdf_id: pdfID }).exec();
-        if (!retirevedPDFArray || retirevedPDFArray.length === 0) {
-            return res.status(404).json({
-                status: false,
-                message: "No such PDF exists",
-            });
-        }
-
         const selectedQueries = await query
-            .find({ user_id: username, pdf_id: pdfID })
+            .find({
+                username: username,
+                pdf_id: new mongoose.mongo.ObjectId(pdf_id),
+            })
             .exec();
 
         interaction.create({
             username,
+            user_id: new mongoose.mongo.ObjectId(user_id),
             interaction_type: "Get",
             interaction_details: "Queries retrieved",
         });
 
-        return res.status(200).json({
-            status: true,
-            message: "Queries retrieved successfully",
-            queries: selectedQueries,
-        });
+        return selectedQueries;
     } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "Some error occured",
-            error: error,
-        });
+        return error;
     }
 };
 
-export const getQuerybyID = async (req: Request, res: Response) => {
+export const getQuerybyID = async (
+    username: string,
+    query_id: string,
+    user_id: string
+) => {
     try {
-        const { queryID } = req.params;
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-            return res.status(200).json({
-                success: false,
-                message: "Error! Please provide a token.",
-            });
-        }
-        const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const username = (decodedToken as Token).username;
-
         const selectedQuery = query
-            .findOne({ user_id: username, query_id: queryID })
+            .findOne({
+                username: username,
+                _id: new mongoose.mongo.ObjectId(query_id),
+            })
             .exec();
 
         interaction.create({
             username,
+            user_id: new mongoose.mongo.ObjectId(user_id),
             interaction_type: "Get",
             interaction_details: "Query retrieved",
         });
 
-        return res.status(200).json({
-            status: true,
-            message: "Query retrieved successfully",
-            query: selectedQuery,
-        });
+        return selectedQuery;
     } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "Some error occured",
-            error: error,
-        });
+        return error;
     }
 };
 
-export const deleteQuery = async (req: Request, res: Response) => {
+export const deleteQuery = async (
+    query_id: string,
+    username: string,
+    user_id: string
+) => {
     try {
-        const { queryID } = req.params;
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-            return res.status(200).json({
-                success: false,
-                message: "Error! Please provide a token.",
-            });
-        }
-        const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const username = (decodedToken as Token).username;
-
-        const retirevedQueryArray = await query
-            .find({ query_id: queryID, user_id: username })
+        await query
+            .deleteOne({
+                _id: new mongoose.mongo.ObjectId(query_id),
+                username: username,
+            })
             .exec();
-        if (!retirevedQueryArray || retirevedQueryArray.length === 0) {
-            return res.status(404).json({
-                status: false,
-                message: "No such query exists",
-            });
-        }
-
-        await query.deleteOne({ query_id: queryID, username: username }).exec();
 
         interaction.create({
             username,
+            user_id: new mongoose.mongo.ObjectId(user_id),
             interaction_type: "Delete",
             interaction_details: "Query deleted",
         });
 
-        return res.status(200).json({
-            status: true,
-            message: "Query deleted successfully",
-        });
+        return true;
     } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "Some error occured",
-            error: error,
-        });
+        return error;
     }
 };
 
 // Admin function(s)
 
-export const getAllQueries = async (req: Request, res: Response) => {
-    try {
-        const token = req.headers.authorization?.split(" ")[1];
-        if (!token) {
-            return res.status(200).json({
-                success: false,
-                message: "Error! Please provide a token.",
-            });
-        }
-        const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
-        const role = (decodedToken as Token).role;
-        if (role !== Role.admin) {
-            return res.status(403).json({
-                status: false,
-                message: "You are not authorized to perform this action",
-            });
-        }
+// export const getAllQueries = async (req: Request, res: Response) => {
+//     try {
+        
+//         const results = await query.find().exec();
 
-        const results = await query.find().exec();
+//         interaction.create({
+//             username: (decodedToken as Token).username,
+//             interaction_type: "Get",
+//             interaction_details: "All queries retrieved (admin)",
+//         });
 
-        interaction.create({
-            username: (decodedToken as Token).username,
-            interaction_type: "Get",
-            interaction_details: "All queries retrieved (admin)",
-        });
-
-        return res.status(200).json({
-            status: true,
-            results: results.length,
-            data: {
-                queries: results,
-            },
-        });
-    } catch (error) {
-        return res.status(500).json({
-            status: false,
-            message: "Some error occured",
-            error: error,
-        });
-    }
-};
+//         return res.status(200).json({
+//             status: true,
+//             results: results.length,
+//             data: {
+//                 queries: results,
+//             },
+//         });
+//     } catch (error) {
+//         return res.status(500).json({
+//             status: false,
+//             message: "Some error occured",
+//             error: error,
+//         });
+//     }
+// };
