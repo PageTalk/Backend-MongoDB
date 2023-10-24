@@ -36,6 +36,7 @@ Welcome to the backend of the PageTalk project. PageTalk allows users to upload 
    - `/pdf/` (POST: Create PDF)
    - `/pdf/:pdfID` (GET: Retrieve PDF by ID)
 
+
 ## Try it yourself:
 
 To run this backend on your local machine, follow these steps:
@@ -46,63 +47,21 @@ To run this backend on your local machine, follow these steps:
    git clone https://github.com/PageTalk/Backend.git
    ```
 2. Configure your environment variables as in the `.env.example` file
-3. Configure the docker-compose file on your end
-4. Open a terminal, CD to this folder, and run
+3. Change the current directory to the server: `cd server`
+4. Run
   
-  ```
-  docker-compose up -d
-  ```
-5. Start the docker container, then create the tables as mentioned in the `database/init.sql` file.
-6. Run
-  
-  ```
-  npm start
-  ```
-7. Your application is now running.
+   ```
+   npm install
+   npm start
+   ```
+5. Your application is now running.
+
+#### Installing new npm packages
+- New packages can be installed through your preferred terminal using the normal `npm i` command.
 
 ## Database Diagram
 
-<img src="https://github.com/PageTalk/Backend/blob/5d19a46daa0b7e56e5d29d224f3df6b56cd1eb73/screenshots/PageTalk.png">
-
-## Starting
-
-Start the docker container, then run
-
-```shell
-docker exec -it pagetalk-mysql-container bash
-```
-
-To start a MySQL server, run
-
-```mysql
-mysql -u root -p
-```
-
-Enter password: 1234
-
-## Troubleshooting
-
-### Incase of SQL Connection error
-
-Run the following command in the MySQL server
-
-```mysql
-ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY '1234';
-```
-
-Note: Server is running on port 3306 so add the port to the dbconfig while creating a connection.
-
-### If connection still fails
-
-If the connection still fails, go into the MySQL Container files, look for `etc/my.cnf` config file, and set port to 3306.
-```
-// my.cnf
----- previous code
-
-port=3306
-
----- rest of the code
-```
+<img src="https://i.ibb.co/wNPdS4S/PageTalk.png">
 
 ## How JWT Works
 
@@ -113,12 +72,15 @@ port=3306
 <img src="https://media.geeksforgeeks.org/wp-content/uploads/20210925202132/Untitled1-660x404.png">
 Credits: GeeksForGeeks
 
-## How to use JWT
+## Contributing
+Contributions are what make the open source community such an amazing place to be learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-1. User sends a POST request to the server with username and password
-2. Server checks if the username and password is correct
-3. If correct, server creates a JWT token and sends it back to the user
-4. User stores the JWT token in the local storage
-5. User sends the JWT token in the header of every request
-6. Server checks if the JWT token is valid
-7. If valid, server sends the response back to the user
+1.  Clone the Project
+2.  Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3.  Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4.  Push to the Branch (`git push origin feature/AmazingFeature`)
+5.  Open a Pull Request
+
+
+## License
+Distributed under the MIT License. See `LICENSE` for more information.
