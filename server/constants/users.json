@@ -1,0 +1,36 @@
+[
+    {
+        "_id": { "$oid": "65241ad56e583d8c7d9a98d9" },
+        "username": "mynewuser",
+        "first_name": "Piyush",
+        "last_name": "Agarwal",
+        "role": "user",
+        "phone": { "$numberDouble": "4248549594.0" },
+        "email": "mynewuser@gmail.com",
+        "isVerified": false,
+        "password": "testpass",
+        "user_metadata": {
+            "created_at": { "$date": { "$numberLong": "1696864981642" } },
+            "updated_at": { "$date": { "$numberLong": "1696864981642" } }
+        },
+        "last_login": { "$date": { "$numberLong": "1696864981642" } },
+        "__v": { "$numberInt": "0" }
+    },
+    {
+        "_id": { "$oid": "65338e3b885ef9efbf5579d1" },
+        "username": "testingUser",
+        "first_name": "MY",
+        "last_name": "BOT",
+        "role": "user",
+        "phone": { "$numberInt": "0" },
+        "email": "bot@pagetalk.com",
+        "isVerified": false,
+        "password": "BOTAdminPass",
+        "user_metadata": {
+            "created_at": { "$date": { "$numberLong": "1697877563950" } },
+            "updated_at": { "$date": { "$numberLong": "1697877563950" } }
+        },
+        "last_login": { "$date": { "$numberLong": "1697877563950" } },
+        "__v": { "$numberInt": "0" }
+    }
+]
