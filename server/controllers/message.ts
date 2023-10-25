@@ -117,3 +117,36 @@ export const createModelMessage = async (req: Request, res: Response) => {
         });
     }
 };
+
+export const getMessagesByDocument = async (req: Request, res: Response) => {
+    const token = req.headers.authorization?.split(" ")[1];
+    if (!token) {
+        return res.status(200).json({
+            success: false,
+            message: "Error! Please provide a token.",
+        });
+    }
+    const decodedToken = jwt.verify(token!, process.env.JWT_SECRET!);
+    const username = (decodedToken as Token).username;
+
+    const user_id = (decodedToken as Token).user_id;
+    const { pdf_id } = req.params;
+
+    // find messages by pdf_id and sort by timestamp
+    const messages = await message
+        .find({ pdf_id: new mongoose.mongo.ObjectId(pdf_id) })
+        .sort({ timestamp: 1 })
+        .exec();
+
+    interaction.create({
+        username,
+        user_id: new mongoose.mongo.ObjectId(user_id),
+        interaction_type: "Read",
+        interaction_details: "Messages fetched",
+    });
+
+    return res.status(200).json({
+        status: true,
+        messages,
+    });
+};
